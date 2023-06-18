@@ -1,0 +1,13 @@
+[package]
+name = "dorustos"
+description = "A simple CHIP-8 emulator written in Rust"
+version = "0.1.0"
+edition = "2021"
+authors = ["Andrés Ignacio Torres <dev@aitorres.com>"]
+readme = "README.md"
+repository = "https://githuib.com/aitorres/doritos"
+license = "AGPL-3.0-or-later"
+keywords = ["chip8", "emulator", "rust"]
+categories = ["emulators", "games", "compilers"]
+
+[dependencies]
