@@ -1,7 +1,9 @@
 # dorustos
 
 <center>
+
 ![Screenshot of dorustos running a Tetris ROM](screenshot.png)
+
 </center>
 
 A simple CHIP-8 emulator written in Rust, following the steps outlined at [An Introduction to Chip-8 Emulation using the Rust Programming Language](https://github.com/aquova/chip8-book).
