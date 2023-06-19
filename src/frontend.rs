@@ -128,3 +128,23 @@ fn key2btn(key: Keycode) -> Option<usize> {
         _ => None,
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use sdl2::keyboard::Keycode;
+
+    #[test]
+    fn key2btn_maps_appropriately() {
+        let result_1 = super::key2btn(Keycode::Num1);
+        assert_eq!(result_1, Some(0x1));
+
+        let result_2 = super::key2btn(Keycode::Num2);
+        assert_eq!(result_2, Some(0x2));
+
+        let result_3 = super::key2btn(Keycode::W);
+        assert_eq!(result_3, Some(0x5));
+
+        let result_4 = super::key2btn(Keycode::K);
+        assert_eq!(result_4, None);
+    }
+}
