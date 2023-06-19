@@ -44,7 +44,7 @@ const FONTSET: [u8; FONTSET_SIZE] = [
     0xF0, 0x80, 0x80, 0x80, 0xF0, // C
     0xE0, 0x90, 0x90, 0x90, 0xE0, // D
     0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
-    0xF0, 0x80, 0xF0, 0x80, 0x80 // F
+    0xF0, 0x80, 0xF0, 0x80, 0x80, // F
 ];
 
 /// A Chip8 virtual machine implementation
@@ -158,19 +158,17 @@ impl Chip8 {
         let digit3 = (op & 0x00F0) >> 4;
         let digit4 = op & 0x000F;
 
-        match(digit1, digit2, digit3, digit4) {
+        match (digit1, digit2, digit3, digit4) {
             (0, 0, 0, 0) => return,
-            (0, 0, 0xE, 0) => {
-                self.screen = [false; SCREEN_SIZE]
-            },
+            (0, 0, 0xE, 0) => self.screen = [false; SCREEN_SIZE],
             (0, 0, 0xE, 0xE) => {
                 let ret_addr = self.pop();
                 self.pc = ret_addr;
-            },
+            }
             (1, _, _, _) => {
                 let nnn = op & 0x0FFF;
                 self.pc = nnn;
-            },
+            }
             (2, _, _, _) => {
                 let nnn = op & 0x0FFF;
                 self.push(self.pc);
@@ -183,7 +181,7 @@ impl Chip8 {
                 if vx == nn {
                     self.pc += 2;
                 };
-            },
+            }
             (4, _, _, _) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -191,7 +189,7 @@ impl Chip8 {
                 if vx != nn {
                     self.pc += 2;
                 };
-            },
+            }
             (5, _, _, 0) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -202,27 +200,27 @@ impl Chip8 {
                 if vx == vy {
                     self.pc += 2;
                 };
-            },
+            }
             (6, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0x00FF) as u8;
 
                 self.v_reg[x] = nn;
-            },
+            }
             (7, _, _, _) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
                 let nn = (op & 0x00FF) as u8;
 
                 self.v_reg[x] = vx.wrapping_add(nn);
-            },
+            }
             (8, _, _, 0) => {
                 let x = digit2 as usize;
                 let y = digit3 as usize;
                 let vy = self.v_reg[y];
 
                 self.v_reg[x] = vy;
-            },
+            }
             (8, _, _, 1) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -231,7 +229,7 @@ impl Chip8 {
                 let vy = self.v_reg[y];
 
                 self.v_reg[x] = vx | vy;
-            },
+            }
             (8, _, _, 2) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -240,7 +238,7 @@ impl Chip8 {
                 let vy = self.v_reg[y];
 
                 self.v_reg[x] = vx & vy;
-            },
+            }
             (8, _, _, 3) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -249,7 +247,7 @@ impl Chip8 {
                 let vy = self.v_reg[y];
 
                 self.v_reg[x] = vx ^ vy;
-            },
+            }
             (8, _, _, 4) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -262,7 +260,7 @@ impl Chip8 {
 
                 self.v_reg[x] = new_vx;
                 self.v_reg[0xF] = new_vf;
-            },
+            }
             (8, _, _, 5) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -275,7 +273,7 @@ impl Chip8 {
 
                 self.v_reg[x] = new_vx;
                 self.v_reg[0xF] = new_vf;
-            },
+            }
             (8, _, _, 6) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -283,7 +281,7 @@ impl Chip8 {
                 let lsb = vx & 1;
                 self.v_reg[x] >>= 1;
                 self.v_reg[0xF] = lsb;
-            },
+            }
             (8, _, _, 7) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -296,7 +294,7 @@ impl Chip8 {
 
                 self.v_reg[x] = new_vx;
                 self.v_reg[0xF] = new_vf;
-            },
+            }
             (8, _, _, 0xE) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -304,7 +302,7 @@ impl Chip8 {
                 let msb = (vx >> 7) & 1;
                 self.v_reg[x] <<= 1;
                 self.v_reg[0xF] = msb;
-            },
+            }
             (9, _, _, 0) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -315,21 +313,21 @@ impl Chip8 {
                 if vx != vy {
                     self.pc += 2;
                 };
-            },
+            }
             (0xA, _, _, _) => {
                 let nnn = op & 0x0FFF;
                 self.i_reg = nnn;
-            },
+            }
             (0xB, _, _, _) => {
                 let nnn = op & 0x0FFF;
                 self.pc = (self.v_reg[0] as u16) + nnn;
-            },
+            }
             (0xC, _, _, _) => {
                 let x = digit2 as usize;
                 let nn = (op & 0x00FF) as u8;
                 let rng: u8 = random();
                 self.v_reg[x] = rng & nn;
-            },
+            }
             (0xD, _, _, _) => {
                 // Get (x, y) coords for the sprite
                 let x_coord = self.v_reg[digit2 as usize] as u16;
@@ -369,7 +367,7 @@ impl Chip8 {
                 } else {
                     self.v_reg[0xF] = 0;
                 }
-            },
+            }
             (0xE, _, 9, 0xE) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -378,7 +376,7 @@ impl Chip8 {
                 if key {
                     self.pc += 2;
                 }
-            },
+            }
             (0xE, _, 0xA, 1) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x];
@@ -387,11 +385,11 @@ impl Chip8 {
                 if !key {
                     self.pc += 2;
                 }
-            },
+            }
             (0xF, _, 0, 7) => {
                 let x = digit2 as usize;
                 self.v_reg[x] = self.dt;
-            },
+            }
             (0xF, _, 0, 0xA) => {
                 let x = digit2 as usize;
                 let mut pressed = false;
@@ -407,25 +405,25 @@ impl Chip8 {
                 if !pressed {
                     self.pc -= 2;
                 }
-            },
+            }
             (0xF, _, 1, 5) => {
                 let x = digit2 as usize;
                 self.dt = self.v_reg[x];
-            },
+            }
             (0xF, _, 1, 8) => {
                 let x = digit2 as usize;
                 self.st = self.v_reg[x];
-            },
+            }
             (0xF, _, 1, 0xE) => {
                 let x = digit2 as usize;
                 let vx = self.v_reg[x] as u16;
                 self.i_reg = self.i_reg.wrapping_add(vx);
-            },
+            }
             (0xF, _, 2, 9) => {
                 let x = digit2 as usize;
                 let c = self.v_reg[x] as u16;
                 self.i_reg = c * 5;
-            },
+            }
             (0xF, _, 3, 3) => {
                 // TODO: optimize?
                 let x = digit2 as usize;
@@ -438,15 +436,14 @@ impl Chip8 {
                 self.ram[self.i_reg as usize] = hundreds;
                 self.ram[(self.i_reg + 1) as usize] = tens;
                 self.ram[(self.i_reg + 2) as usize] = ones;
-
-            },
+            }
             (0xF, _, 5, 5) => {
                 let x = digit2 as usize;
                 let i = self.i_reg as usize;
                 for idx in 0..=x {
                     self.ram[i + idx] = self.v_reg[idx];
                 }
-            },
+            }
             (0xF, _, 6, 5) => {
                 let x = digit2 as usize;
                 let i = self.i_reg as usize;
@@ -454,7 +451,7 @@ impl Chip8 {
                     self.v_reg[idx] = self.ram[i + idx];
                 }
             }
-            (_, _, _, _) => unimplemented!("Unimplemented opcode: {:X}", op)
+            (_, _, _, _) => unimplemented!("Unimplemented opcode: {:X}", op),
         };
     }
 

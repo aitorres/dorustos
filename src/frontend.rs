@@ -5,7 +5,7 @@ use sdl2::rect::Rect;
 use sdl2::render::Canvas;
 use sdl2::video::Window;
 
-use crate::backend::{Chip8, SCREEN_WIDTH, SCREEN_HEIGHT};
+use crate::backend::{Chip8, SCREEN_HEIGHT, SCREEN_WIDTH};
 
 /// A scaling factor for the screen
 const SCALE: u32 = 15;
@@ -28,12 +28,12 @@ const TICKS_PER_FRAME: usize = 10;
 pub fn run_game(mut chip8: Chip8) {
     let sdl_context = sdl2::init().unwrap();
     let video_subsystem = sdl_context.video().unwrap();
-    let window = video_subsystem.
-        window("dorustos Chip-8 Emulator", WINDOW_WIDTH, WINDOW_HEIGHT).
-        position_centered().
-        opengl().
-        build().
-        unwrap();
+    let window = video_subsystem
+        .window("dorustos Chip-8 Emulator", WINDOW_WIDTH, WINDOW_HEIGHT)
+        .position_centered()
+        .opengl()
+        .build()
+        .unwrap();
 
     let mut canvas = window.into_canvas().present_vsync().build().unwrap();
     canvas.clear();
@@ -44,20 +44,28 @@ pub fn run_game(mut chip8: Chip8) {
     'gameloop: loop {
         for evt in event_pump.poll_iter() {
             match evt {
-                Event::Quit{..} | Event::KeyDown{keycode: Some(Keycode::Escape), ..} => {
+                Event::Quit { .. }
+                | Event::KeyDown {
+                    keycode: Some(Keycode::Escape),
+                    ..
+                } => {
                     break 'gameloop;
-                },
-                Event::KeyDown{keycode: Some(key), ..} => {
+                }
+                Event::KeyDown {
+                    keycode: Some(key), ..
+                } => {
                     if let Some(btn) = key2btn(key) {
                         chip8.keypress(btn, true);
                     }
-                },
-                Event::KeyUp { keycode: Some(key), ..} => {
+                }
+                Event::KeyUp {
+                    keycode: Some(key), ..
+                } => {
                     if let Some(btn) = key2btn(key) {
                         chip8.keypress(btn, false);
                     }
                 }
-                _ => ()
+                _ => (),
             }
         }
 
