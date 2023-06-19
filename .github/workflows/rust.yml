@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Install `libsdl2`
-        run: sudo apt-get install libsdl2
+        run: sudo apt-get install libsdl2-dev
       - name: Checkout project
         uses: actions/checkout@v2
       - name: Setup Rust toolchain
