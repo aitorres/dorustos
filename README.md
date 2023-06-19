@@ -6,6 +6,8 @@ Built during a weekend afternoon with a big bag of Doritos (do Doritos count as 
 
 ## Installation
 
+In order to install this emulator you'll need `libsdl2` installed to your system. You should be able to achieve this by using `brew`, `apt` or your chosen OS's package manager.
+
 Clone the repo and use `cargo` to build this project.
 
 ```bash
